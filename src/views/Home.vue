@@ -1,0 +1,230 @@
+<template>
+  <el-row>
+    <el-col :span="8">
+      <div class="grid-content bg-purple">
+        <el-card class="box-card">
+          <div class="user">
+            <img src="../assets/img/user.png" alt="" srcset="" />
+            <div class="user-info">
+              <p class="user-name">admin</p>
+              <p class="access">超级管理员</p>
+            </div>
+          </div>
+          <div class="login-info">
+            <p>上次登录时间：<span>2023-04-09</span></p>
+            <p>上次登录地点：<span>湖南</span></p>
+          </div>
+        </el-card>
+        <el-card style="height: 300px; margin-top: 30px">
+          <el-table :data="tableData" stripe style="width: 100%">
+            <el-table-column
+              v-for="(val, key) in tablelabel"
+              :prop="key"
+              :label="val"
+              :key="key"
+            >
+            </el-table-column>
+          </el-table>
+        </el-card>
+      </div>
+    </el-col>
+    <el-col :span="16">
+      <div class="grid-content bg-purple-light">
+        <div class="number">
+          <el-card
+            v-for="item in countData"
+            :key="item.name"
+            :body-style="{ display: 'flex',padding:0 }"
+          >
+            <i
+              class="icon"
+              :class="`el-icon-${item.icon}`"
+              :style="{ backgroundColor: item.color }"
+            ></i>
+            <div class="detail">
+              <p class="price">￥{{ item.value }}</p>
+              <p class="text">{{ item.name }}</p>
+            </div>
+          </el-card>
+        </div>
+      </div>
+    </el-col>
+  </el-row>
+</template>
+
+<script>
+import {getData} from "../api"
+export default {
+  name: "Home",
+  data() {
+    return {
+      tableData: [
+        {
+          name: "oppo",
+          todayBuy: 100,
+          monthBuy: 300,
+          totalBuy: 800,
+        },
+        {
+          name: "vivo",
+          todayBuy: 100,
+          monthBuy: 300,
+          totalBuy: 800,
+        },
+        {
+          name: "苹果",
+          todayBuy: 100,
+          monthBuy: 300,
+          totalBuy: 800,
+        },
+        {
+          name: "小米",
+          todayBuy: 100,
+          monthBuy: 300,
+          totalBuy: 800,
+        },
+        {
+          name: "三星",
+          todayBuy: 100,
+          monthBuy: 300,
+          totalBuy: 800,
+        },
+        {
+          name: "魅族",
+          todayBuy: 100,
+          monthBuy: 300,
+          totalBuy: 800,
+        },
+      ],
+      tablelabel: {
+        name: "课程",
+        todayBuy: "今日购买",
+        monthBuy: "本月购买",
+        totalBuy: "总购买",
+      },
+      countData: [
+        {
+          name: "今日支付订单",
+          value: 1234,
+          icon: "success",
+          color: "#2ec7c9",
+        },
+        {
+          name: "今日收藏订单",
+          value: 210,
+          icon: "star-on",
+          color: "#ffb980",
+        },
+        {
+          name: "今日未支付订单",
+          value: 1234,
+          icon: "s-goods",
+          color: "#5ab1ef",
+        },
+        {
+          name: "本月支付订单",
+          value: 1234,
+          icon: "success",
+          color: "#2ec7c9",
+        },
+        {
+          name: "本月收藏订单",
+          value: 210,
+          icon: "star-on",
+          color: "#ffb980",
+        },
+        {
+          name: "本月未支付订单",
+          value: 1234,
+          icon: "s-goods",
+          color: "#5ab1ef",
+        },
+      ],
+    };
+  },
+  mounted() {
+    getData().then((data)=>{
+      console.log(data);
+    })
+  },
+};
+</script>
+
+<style lang="less" scoped>
+.user {
+  display: flex;
+  padding-bottom: 20px;
+  margin-bottom: 20px;
+  border-bottom: 1px solid #ccc;
+
+  // justify-content: space-between;
+  align-items: center;
+  img {
+    margin-right: 40px;
+    height: 90px;
+    width: 90px;
+    border-radius: 50%;
+  }
+  .user-info {
+    .user-name {
+      font-size: 20px;
+      margin-bottom: 10px;
+    }
+    .access {
+      font-size: 10px;
+
+      color: #999;
+    }
+  }
+}
+
+.login-info {
+  p {
+    line-height: 28px;
+    font-size: 10px;
+    span {
+      font-size: 10px;
+      margin-left: 40px;
+      color: #999;
+    }
+  }
+}
+.number {
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;//超出内容自动换行
+  .icon {
+
+    width: 60px;
+    height:60px;
+    font-size: 30px;
+    color:#fff;
+    line-height: 60px;
+    text-align: center;
+  }
+  .detail{
+    margin-left:15px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    .price{
+      font-size: 20px;
+      line-height: 20px;
+      margin-bottom: 14px;
+
+
+    
+    }
+    .text{
+       font-size: 13px;
+       color:#ccc;
+    }
+  }
+  .el-card{
+    width: 32%;
+      margin-bottom: 14px;
+
+
+  }
+}
+</style>
