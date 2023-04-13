@@ -1,6 +1,6 @@
 <template>
   <el-row>
-    <el-col :span="8">
+    <el-col :span="8" style="padding-right: 10px">
       <div class="grid-content bg-purple">
         <el-card class="box-card">
           <div class="user">
@@ -28,13 +28,13 @@
         </el-card>
       </div>
     </el-col>
-    <el-col :span="16">
+    <el-col :span="16" style="padding-left: 10px">
       <div class="grid-content bg-purple-light">
         <div class="number">
           <el-card
             v-for="item in countData"
             :key="item.name"
-            :body-style="{ display: 'flex',padding:0 }"
+            :body-style="{ display: 'flex', padding: 0 }"
           >
             <i
               class="icon"
@@ -48,54 +48,29 @@
           </el-card>
         </div>
       </div>
+      <el-card style="height: 200px">
+        <div ref="eChart1" style="height: 200px"></div>
+      </el-card>
+      <div class="eChart2">
+        <el-card>
+          <div ref="eChart3" style="height: 200px"></div>
+        </el-card>
+        <el-card>
+          <div ref="eChart4" style="height: 200px"></div>
+        </el-card>
+      </div>
     </el-col>
   </el-row>
 </template>
 
 <script>
-import {getData} from "../api"
+import { getData } from "../api";
+import * as echarts from "echarts";
 export default {
   name: "Home",
   data() {
     return {
-      tableData: [
-        {
-          name: "oppo",
-          todayBuy: 100,
-          monthBuy: 300,
-          totalBuy: 800,
-        },
-        {
-          name: "vivo",
-          todayBuy: 100,
-          monthBuy: 300,
-          totalBuy: 800,
-        },
-        {
-          name: "苹果",
-          todayBuy: 100,
-          monthBuy: 300,
-          totalBuy: 800,
-        },
-        {
-          name: "小米",
-          todayBuy: 100,
-          monthBuy: 300,
-          totalBuy: 800,
-        },
-        {
-          name: "三星",
-          todayBuy: 100,
-          monthBuy: 300,
-          totalBuy: 800,
-        },
-        {
-          name: "魅族",
-          todayBuy: 100,
-          monthBuy: 300,
-          totalBuy: 800,
-        },
-      ],
+      tableData: [],
       tablelabel: {
         name: "课程",
         todayBuy: "今日购买",
@@ -143,9 +118,132 @@ export default {
     };
   },
   mounted() {
-    getData().then((data)=>{
-      console.log(data);
-    })
+    getData().then(({ data }) => {
+      const { tableData } = data.data;
+
+      this.tableData = tableData;
+
+      const eChart1 = echarts.init(this.$refs.eChart1);
+      var eChart1Option = {};
+      const { orderData, userData,videoData} = data.data;
+      //  获取可枚举的属性
+      //  可枚举就是可遍历的意思，如果对象的属性可以通过for key in myOject遍历，就意味着该属性是可枚举的。新建一个对象时，定义的属性默认是可枚举的，
+      const xAxis = Object.keys(orderData.data[0]);
+      console.log(userData.map(item => item.date));
+      const xAxisShow = {
+        data: xAxis,
+      };
+      eChart1Option.tooltip = {};
+      eChart1Option.xAxis = xAxisShow;
+      eChart1Option.yAxis = {};
+      eChart1Option.legend = xAxisShow;
+      // 初始化渲染数据
+      eChart1Option.series = [];
+      xAxis.forEach((key) => {
+        eChart1Option.series.push({
+          name: key,
+          // 通过key可以再偏离一次
+          data: orderData.data.map((item) => item[key]),
+          type: "line",
+        });
+     
+      });
+      eChart1.setOption(eChart1Option);
+      // 要渲染的数据
+
+      // 柱状图
+      const echart3 = echarts.init(this.$refs.eChart3);
+      const eChart3Option = {
+        
+          legend: {
+            // 图例文字颜色
+            textStyle: {
+              color: "#333",
+            },
+          },
+          grid: {
+            left: "20%",
+          },
+          // 提示框
+          tooltip: {
+            trigger: "axis",
+          },
+          xAxis: {
+            type: "category", // 类目轴
+            data: userData.map(item => item.date),
+            axisLine: {
+              lineStyle: {
+                color: "#17b3a3",
+              },
+            },
+            axisLabel: {
+              interval: 0,
+              color: "#333",
+            },
+          },
+          yAxis: [
+            {
+              type: "value",
+              data:{},
+              axisLine: {
+                lineStyle: {
+                  color: "#17b3a3",
+                },
+              },
+            },
+          ],
+          color: [
+            "#2ec7c9",
+            "#b6a2de",
+            "#5ab1ef",
+            "#ffb980",
+            "#d87a80",
+            "#8d98b3",
+          ],
+          series:
+           [
+            // 有多个对象可显示多行
+            {
+              name: "新增",
+              // 通过key可以再偏离一次
+              data: userData.map(item => item.new),
+              type: "bar",
+            },
+            {
+              name: "活跃",
+              // 通过key可以再偏离一次
+              data: userData.map(item => item.active),
+              type: "bar",
+            },
+          ],
+        
+      };
+      echart3.setOption(eChart3Option);
+
+       // 柱状图
+      const echart4 = echarts.init(this.$refs.eChart4);
+      const eChart4Option= {
+          tooltip: {
+            trigger: "item",
+          },
+          color: [
+            "#0f78f4",
+            "#dd536b",
+            "#9462e5",
+            "#a6a6a6",
+            "#e1bb22",
+            "#39c362",
+            "#3ed1cf",
+          ],
+          series: [
+            {
+              data:videoData,
+              type:'pie'
+            }
+          ],
+        }
+        echart4.setOption(eChart4Option);
+    });
   },
 };
 </script>
@@ -192,39 +290,42 @@ export default {
 .number {
   display: flex;
   justify-content: space-between;
-  flex-wrap: wrap;//超出内容自动换行
+  flex-wrap: wrap; //超出内容自动换行
   .icon {
-
     width: 60px;
-    height:60px;
+    height: 60px;
     font-size: 30px;
-    color:#fff;
+    color: #fff;
     line-height: 60px;
     text-align: center;
   }
-  .detail{
-    margin-left:15px;
+  .detail {
+    margin-left: 15px;
     display: flex;
     flex-direction: column;
     justify-content: center;
-    .price{
+    .price {
       font-size: 20px;
       line-height: 20px;
       margin-bottom: 14px;
-
-
-    
     }
-    .text{
-       font-size: 13px;
-       color:#ccc;
+    .text {
+      font-size: 13px;
+      color: #ccc;
     }
   }
-  .el-card{
+  .el-card {
     width: 32%;
-      margin-bottom: 14px;
-
-
+    margin-bottom: 14px;
+  }
+}
+.eChart2 {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 20px;
+  .el-card {
+    width: 48%;
+    height: 260px;
   }
 }
 </style>

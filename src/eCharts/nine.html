@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        #root {
+            position: relative;
+            height: 300px;
+            width: 300px;
+            border: 1px solid red;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .row {
+            width: 300px;
+            height: 100px;
+            display: flex;
+            flex-direction: row;
+            background: yellow;
+        }
+
+        .row div {
+
+            text-align: center;
+            line-height: 100px;
+            font-family: "幼圆";
+
+            height: 100px;
+            font-weight: 1000;
+            width: 100px;
+        }
+
+        .selected {
+            font-size: 20px;
+            background-color: purple;
+
+        }
+
+        #row2,
+        #row3 {
+            display: flex;
+            justify-content: space-between;
+            flex-direction: row-reverse;
+        }
+
+        .btn {
+            background: #ccc;
+            height: 100px;
+            width: 100px;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            text-align: center;
+            line-height: 100px;
+            font-family: "幼圆";
+
+
+        }
+    </style>
+</head>
+
+<body>
+    <div id="root">
+        <div id="row1" class="row ">
+            <div class="selected" data-index="0">一等奖</div>
+            <div data-index="1">二等奖</div>
+            <div data-index="2">三等奖</div>
+
+
+        </div>
+        <div id="row2" class="row">
+            <div data-index="3">四等奖</div>
+
+            <div data-index="7">八等奖</div>
+
+        </div>
+        <div id="row3" class="row">
+            <div data-index="4">伍等奖</div>
+            <div data-index="5">六等奖</div>
+            <div data-index="6">七等奖</div>
+
+        </div>
+
+        <div class="btn">抽奖(5s)</div>
+    </div>
+
+
+</body>
+<script>
+    let btn = document.querySelector(".btn");
+    const prizes = ['一等奖', '二等奖', '三等奖', '四等奖', '伍等奖', '六等奖', '七等奖', '八等奖'];
+    // 3 * 1000 + 2 * Math.random() * 1000代表4/5s后获取数据
+    function getPrizes() {
+        return new Promise(resolve => {
+            setTimeout(() => {
+                const prizesIndex = Math.floor(prizes.length * Math.random());
+                resolve(prizes[prizesIndex])
+            }, 3 * 1000 + 2 * Math.random() * 1000)
+        })
+    }
+    //抽奖答案
+    let TIME = 5;
+    let minus
+    function startTime() {
+         minus = setInterval(() => {
+
+            if (TIME > -1) {
+                // draw();
+                btn.innerHTML = `抽奖中${TIME}s`;
+
+
+            } else {
+                clearInterval(minus)
+                btn.innerHTML = `抽奖结束`;
+            }
+
+
+            TIME -= 1;
+
+
+            // if(TIME=-1){
+            //     clearInterval(minus)
+            // }
+            // console.log(TIME);
+
+        }, 1000)
+
+    }
+    // draw();
+
+    // console.log(getPrizes());
+    // 获取dom元素，由tagname伪数组变真数组
+
+    const childArr = Array.from(document.getElementsByClassName('row'));
+    // console.log(childArr);
+    const items = [];
+    childArr.forEach((el) => {
+        Array.from(el.children).forEach((item => {
+            items.push(item);
+        }))
+    })
+
+    // 抽取八等奖的items位置，后面有利于顺时针转splice()会改变原数组
+    const removeItem = items.splice(4, 1);
+    console.log(items);
+    items.push(removeItem[0]);
+
+
+    // 封装抽奖函数
+
+    function draw() {
+        let index = 0;
+        // data的文本
+        let resText = '';
+        const polling = setInterval(() => {
+            if (index === prizes.length) {
+                index = 0;
+            }
+            // 设置select的innertext与data的文本进行对比，如果一样就停止计时器
+            let curText = '';
+            items.forEach((item, itemIndex) => {
+                item.classList.remove('selected');
+                if (index == itemIndex) {
+                    // items[itemIndex].style.background="#00000000"
+                    items[itemIndex].classList.add('selected');
+                    curText = items[itemIndex].innerHTML;
+                }
+            })
+            index++;
+            if (resText === curText) {
+                clearInterval(polling);
+            }
+            // console.log(index);
+        }, 250)
+        getPrizes().then((data) => {
+            console.log("抽奖结果", data);
+            resText = data;
+        })
+    }
+
+
+    
+  
+    btn.onclick = function () {
+        startTime();
+        // console.log("909");
+        // clearInterval(minus)
+        if (btn.innertext=='抽奖中' || btn.innertext == '抽奖结束') return
+        btn.innertext='抽奖中'
+        draw();
+
+    }
+
+
+
+</script>
+
+</html>
