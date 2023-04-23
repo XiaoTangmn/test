@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    
+</body>
+<script>
+    var tmp = new Date();
+
+
+function f() {
+  console.log(tmp);
+  if (false) {
+    var tmp = 'hello world';
+  }
+}
+
+// 由于变量提升if内部的tmp替代了外面的temp
+f(); // undefined
+
+// 上面代码中，常量foo储存的是一个地址，这个地址指向一个对象。不可变的只是这个地址，即不能把foo指向另一个地址，但对象本身是可变的，所以依然可以为其添加新属性。
+
+const foo={};
+foo.prop = 123;
+// foo ={name:"000"}
+console.log(foo);
+// 等号左边的两个变量的次序，与等号右边两个同名属性的次序不一致，但是对取值完全没有影响
+
+var {bar,n:name}={n:"小唐",bar:false}
+console.log(bar,name);
+let obj = {
+  p: [
+    'Hello',
+    { y: 'World' }
+  ]
+};
+
+
+let { p: [x, { y }] } = obj;
+ // "World"
+ console.log(x,y);
+ const node = {
+  loc: {
+    start: {
+      line: 1,
+      column: 5
+    }
+  }
+};
+
+
+let {loc:{start},loc:{start:{line}}}=node;
+console.log(start);
+console.log(line);
+// 对象的解构赋值可以取到继承的属性
+'use strict'
+var obj1={};
+var obj3 = {name2:"bar"};
+// 把obj1原型设置为obj3
+Object.setPrototypeOf(obj1,obj3);
+const {name2} =obj1;
+console.log(name2);
+var arr =[1,2,2,"opop"];
+var {1:first,[arr.length-1]:last}=arr;
+
+console.log(first,last);
+
+function add([x, y]){
+  return x + y;
+}
+
+
+console.log(add([1, 2]) );
+function move({x4=9,y=9}={}){
+  console.log(x4+y);
+}
+move({x4:8,y:7});
+function move3({x, y} = { x: 0, y: 0 }) {
+  return [x, y];
+}
+
+
+move({x: 3, y: 8}); // [3, 8]
+console.log(move3({x: 3})); // [3, undefined]
+move({}); // [undefined, undefined]
+move(); // [0, 0]
+
+// 解构有利于变量的交换，取JSON的数据，指定默认值
+const s = '  abc  ';
+console.log(s.trim); // "abc"
+console.log(s.trimStart()); // "abc  "
+console.log(s.trimEnd()); // "  abc"
+
+let getUser={
+  name:Symbol(),
+  [Symbol('say')]:function(){
+    console.log("niha");
+  }
+}
+console.log(getUser);
+console.log(getUser.say);
+</script>
+</html>
