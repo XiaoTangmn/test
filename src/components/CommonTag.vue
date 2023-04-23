@@ -1,65 +1,66 @@
 <template>
-<!-- $route.name === item.name然当前路由点亮 -->
-<div class="tabs">
-  <el-tag
-    v-for="(item,index) in tags"
-    :key="item.label"
-    :closable="item.name !== 'home'"
-    :effect="$route.name === item.name ? 'dark': 'plain'"
-    @click="changeMenu(item)"
-    @close="handleClose(item,index)"
-  >
-    {{ item.label }}
-  </el-tag>
-</div>
+    <div class="tabs">
+        <el-tag
+            v-for="(item, index) in tags"
+            :key="item.path"
+            :closable="item.name !== 'home'"
+            :effect="$route.name === item.name ? 'dark' : 'plain'"
+            @click="changeMenu(item)"
+            @close="handleClose(item, index)"
+            size="small"
+            >
+            {{ item.label }}
+        </el-tag>
+    </div>
 </template>
-
 <script>
-import {mapState,mapMutations} from "vuex"
+import { mapState, mapMutations } from 'vuex'
 export default {
-    name:'CommonTag',
+    name: 'CommonTag',
     data() {
-        return {
-            
-        }
+        return {}
+    },
+    computed: {
+        ...mapState({
+            tags: state => state.tab.tabsList
+        })
     },
     methods: {
-      ...mapMutations(['closeTag']),
-      changeMenu(item){
-      
-        this.$router.push(
-         { name:item.name}
-        );
-          console.log(item+"val66");
-      }
-      ,handleClose(item,index){
-        // 调用moutation的closeTag
-        this.closeTag(item);
-        //不需要减一，应为this.tags.length是删除后的数据长度已自动减一
-        const len=this.tags.length;
-        console.log(this.tags+"index"+len);
-        if(item.name != this.$route.name){
-          return;
+        ...mapMutations(['closeTag']),
+        // 点击tag跳转的功能
+        changeMenu(item) {
+            console.log(item,"即将跳转")
+            this.$router.push({ name: item.name })
+        },
+        // 点击tag删除的功能
+        handleClose(item, index) {
+            // 调用store中的mutation
+            this.closeTag(item)
+            const length = this.tags.length
+            // 删除之后的跳转逻辑
+            if (item.name !== this.$route.name) {
+                return
+            }
+            // 表示的是删除的最后一项
+            if (index === length) {
+                this.$router.push({
+                    name: this.tags[index - 1].name
+                })
+            } else {
+                this.$router.push({
+                    name: this.tags[index].name
+                })
+            }
         }
-        // 表示删除的最后一项,index往前腿一个背景
-        if(index == len){
-         this.$router.push({
-          name:this.tags[index-1].name
-         })
-        }else{
-          this.$router.push({
-            name:this.tags[index].name
-         })
-        }
-      }
-    },
-    computed:{
-        ...mapState({
-            tags:state=>state.tab.tabsList
-        })
     }
-};
+}
 </script>
-
-<style>
+<style lang="less" scoped>
+.tabs {
+    padding: 20px;
+    .el-tag {
+        margin-right: 15px;
+        cursor: pointer;
+    }
+}
 </style>
