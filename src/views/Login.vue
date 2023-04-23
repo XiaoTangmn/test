@@ -49,9 +49,13 @@ methods:{
             console.log(data);
             if(data.code===20000){
            
-              cookie.set("token",   data.data.token);
-              this.$router.push
-("/home")
+              cookie.set("token",data.data.token);
+              this.$router.push("/home")
+//拿出menu 存入store数据
+
+this.$store.commit("setMenu",data.data.menu)
+this.$store.commit("addMenu",this.$router)
+
             }else{
                  this.$message.error( data.data.message);
             }
