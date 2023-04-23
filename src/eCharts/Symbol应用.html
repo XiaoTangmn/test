@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Symbol应用</title>
+</head>
+<body>
+    
+</body>
+<script>
+    // Symbol.xx属性是本身的方法，有把Symbol.xx作为某个属性实现对象功能的扩展
+    class p {
+        static [Symbol.hasInstance](prams){
+            console.log(prams);
+            console.log("我被用来监测方法类型·");
+        }
+    }
+    let o = {name:"opopo"};
+    console.log(o instanceof p);
+    const sym = Symbol('foo');
+console.log(sym.description);// "foo"
+let sym2 = Symbol();
+let a ={
+    name:Symbol(),
+};
+// a[sym2]={name:"opop000"};
+
+
+a.name="oooo";
+console.log(a.name);
+a.name="ooio";
+console.log(a.name);
+var exp = {
+    pat :"in",
+    [Symbol.split](str){
+        return str.split(this.pat);
+    }
+
+}
+// 重写字符串split方法
+console.log("dayinlo".split(exp));
+const shapeType = {
+  triangle: Symbol()
+};
+function getArea(shape, options) {
+  let area = 0;
+  switch (shape) {
+    case shapeType.triangle:
+      area = .5 * options.width * options.height;
+      break;
+  }
+  return area;
+}
+shapeType.triangle="a"
+console.log(shapeType.triangle);
+console.log(getArea(shapeType.triangle, { width: 100, height: 100 }));
+// Object.getOwnPropertySymbols()方法，可以获取指定对象的所有 Symbol 属性名。该方法返回一个数组，成员是当前对象的所有用作属性名的 Symbol 值
+const obj = {};
+let a1 = Symbol('a');
+let b = Symbol('b');
+obj[a1] = 'Hello';
+obj[b] = 'World';
+const objectSymbols = Object.getOwnPropertySymbols(obj);
+
+console.log(objectSymbols);
+
+console.log(Symbol("bar") === Symbol("bar"));
+
+// 具有Symbol.iterator属性的数组，元素。。。都可以用for..of遍历
+
+const XYJ =['唐僧','西游记'];
+  
+
+  let iter =XYJ[Symbol.iterator]();
+  console.log(iter.next());
+  console.log(iter.next());
+  console.log(iter.next());
+
+console.log(Symbol.for("bar") === Symbol("bar"));
+</script>
+</html>

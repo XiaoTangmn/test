@@ -1,0 +1,566 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    
+</body>
+<script>
+    {
+  let a = 10;
+  var b = 1;
+}
+
+console.log(b,"b");
+console.log(a,"a");
+var a = [];
+for (let i = 0; i < 10; i++) {
+  a[i] = function () {
+    console.log(i);
+  };
+}
+a[6](); // 6:应为：JavaScript 引擎内部会记住上一轮循环的值，初始化本轮的变量i时，就在上一轮循环的基础上进行计算
+
+// 调用 Generator 函数，返回一个遍历器对象，代表 Generator 函数的内部指针。以后，每次调用遍历器对象的 next 方法，就会返回一个有着 value 和 done 两个属性的对象。 value 属性表示当前的内部状态的值，是 yield 表达式后面那个表达式的值； done 属性是一个布尔值，表示是否遍历结束。
+
+function* he(){
+    yield 'hrr';
+    yield 'opop';
+    return "0000";
+}
+// 不能直接he()。next（）；指针永远指向第一个yield
+var h = he();
+// console.log(h.next());
+// console.log(h.next());
+
+// console.log(h.next());
+
+// console.log(h.next());
+
+// 遇到 yield 表达式，就暂停执行后面的操作，并将紧跟在 yield 后面的那个表达式的值，作为返回的对象的 value 属性值。
+
+var a =[1,[[2,3],4],8];
+function* arrC(a){
+  var len =  a.length;
+  for (var i = 0; i < len; i++) {
+   var item = a[i];
+   if(typeof item !== 'number'){
+yield* arrC(item);
+   }else{
+ yield item; 
+   }
+    
+  }
+
+}
+//  yield 表达式如果用在另一个表达式之中，必须放在圆括号里面。
+
+function* f3(){
+  console.log("h1"+(yield 2));
+  console.log("h2"+(yield 3));
+
+  return 00;
+}var t3 = f3();
+console.log(t3.next());
+
+
+for (const f of arrC(a)) {
+  console.log(f);
+}
+
+function* foo(x,y){
+  console.log(x,y);
+}
+// yield 表达式用作函数参数或放在赋值表达式的右边，可以不加括号。
+function* demo() {
+  foo(yield 'a', yield 'b'); // OK
+  let input = yield 90; // OK
+}
+var t4 = demo();
+console.log(t4.next());
+console.log(t4.next());
+console.log(t4.next());
+// 一个数据结构只要具有 Symbol.iterator 属性，就可以认为是“可遍历的”（iterable）。 Symbol.iterator 属性本身是一个函数，就是当前数据结构默认的遍历器生成函数。执行这个函数，就会返回一个遍历器
+// 由于 Generator 函数就是遍历器生成函数，因此可以把Generator 赋值给对象的 Symbol.iterator 属性，从而使得该对象具有Iterator 接口。
+
+var f5 ={};
+f5[Symbol.iterator]=function* (){
+  yield 1;
+  yield 2;
+
+  yield "opojkj你好";
+  return "结束"
+
+}
+// return的value不会记录其中
+console.log([...f5]);
+
+// next第二次可以创值
+function* foo(x) {
+  var y = 2 * (yield (x + 1));
+  var z = yield (y / 3);
+  return (x + y + z);
+}
+var t6=foo(8);
+
+console.log(t6.next());
+console.log(t6.next(9));
+console.log(t6.next(75));
+// 让第一次传入next值有用
+
+function t7 (tt7){
+    return function(...args){
+     var d7 = tt7(...args);
+     d7.next();
+     return d7
+    }
+}
+
+const t8 = t7(function* (){
+  console.log(` First input: ${yield} ` );
+  return 'opop'
+})
+
+t8().next("9090")
+t8().next("9090")
+
+function wrapper(generatorFunction) {
+  return function (...args) {
+    let generatorObject = generatorFunction(...args);
+    generatorObject.next();
+    return generatorObject;
+  };
+}
+
+
+const wrapped = wrapper(function* () {
+  console.log( `First input: ${yield}` );
+  return 'DONE';
+});
+
+
+wrapped().next('hello!')
+// First input: hello!
+
+function* foo() {
+  yield 1;
+  yield 2;
+  yield 3;
+  yield 4;
+  yield 5;
+  return 6;
+}
+
+
+for (let v of foo()) {
+  console.log(v);
+}
+// 1 2 3 4 5
+
+
+
+function* objK(obj){
+  // 返回一个由目标对象自身的属性键组成的数组。
+  let propKeys = Reflect.ownKeys(obj);
+
+ for (const propKey of propKeys) {
+  yield [propKey,obj[propKey]]
+  
+ }
+}
+let jane = { first: 'Jane', last: 'Doe' };
+for (let [key,value] of objK(jane)) {
+  console.log(`${key}:${value}`);
+  
+ }
+
+ function* objectEntries(obj) {
+  // let propKeys = Reflect.ownKeys(obj);
+  let propKeys = Object.keys(obj);
+
+
+
+  for (let propKey of propKeys) {
+    yield [propKey, obj[propKey]];
+  }
+}
+
+
+let jane2 = { first: 'Jane', last: 'Doe' };
+
+
+for (let [key, value] of objectEntries(jane)) {
+  console.log(`${key}:${value}`);
+
+}
+// first: Jane
+// last: Doe
+
+// for...of 循环以外，扩展运算符（ ... ）、解构赋值和 Array.from 方法内部调用的，都是遍历器接口。这意味着，它们都可以将 Generator 函数返回的 Iterator 对象，作为参数。
+
+
+function* numbers () {
+  yield 1
+  yield 2
+  return 3
+  // yield 4
+}
+
+
+// 扩展运算符
+[...numbers()] // [1, 2]
+// console.log([...numbers()]);
+
+// Array.from 方法
+Array.from(numbers()) // [1, 2]
+
+
+// 解构赋值
+let [x, y] = numbers();
+x // 1
+y // 2
+
+
+// for...of 循环
+for (let n of numbers()) {
+  console.log(n)
+}
+// 1
+// 2
+
+// throw 方法被捕获以后，会附带执行下一条 yield 表达式。也就是说，会附带执行一次 next 方法。
+
+var gen = function* gen(){
+  try {
+    yield console.log('a');
+  } catch (e) {
+    console.log("出错了");
+  }
+  yield console.log('b');
+  yield console.log('c');
+}
+
+
+var g = gen();
+g.next() // a
+g.throw() // b
+g.next() // c
+
+// throw 命令抛出的错误不会影响到遍历器的状态，所以两次执行 next 方法，都进行了正确的操作。、
+// 一旦 Generator 执行过程中抛出错误，且没有被内部捕获，就不会再执行下去了。如果此后还调用 next 方法，将返回一个 value 属性等于 undefined 、 done 属性等于 true 的对象
+// log(g());
+
+function* g20(y4) {
+  // next 方法的参数表示上一个 yield 表达式的返回值
+  var y5=2*(yield y4);
+  var y7=2*(yield y5/1);
+
+  
+  
+ 
+  // console.log('throwing an exception');
+  // throw new Error('generator broke!');
+  
+}
+
+var d7 = g20(4);
+// d7.next()
+console.log(d7.next());
+console.log(d7.next());
+console.log(d7.next(),"ioio");
+
+
+
+function* g6() {
+  yield 1;
+  console.log('throwing an exception');
+  throw new Error('generator broke!');
+  yield 2;
+  yield 3;
+}
+
+
+function log(generator) {
+  var v;
+  console.log('starting generator90909');
+  try {
+    v = generator.next();
+    console.log('第一次运行next方法', v);
+  } catch (err) {
+    console.log('捕捉错误', err.message);
+  }
+  try {
+    v = generator.next();
+    console.log('第二次运行next方法', v);
+  } catch (err) {
+    console.log('捕捉错误', v);
+  }
+  try {
+    v = generator.next();
+    console.log('第三次运行next方法', v);
+  } catch (err) {
+    console.log('捕捉错误', v);
+  }
+  console.log('caller done');
+}
+
+
+log(g6());
+// starting generator
+// 第一次运行next方法 { value: 1, done: false }
+// throwing an exception
+// 捕捉错误 { value: 1, done: false }
+// 第三次运行next方法 { value: undefined, done: true }
+// caller done
+// 如果 return 方法调用时，不提供参数，则返回值的 value 属性为 undefined 。
+// function* gen2() {
+//   yield 1;
+//   yield 2;
+//   console.log('throwing an exception');
+//   throw new Error('generator broke!');
+//   yield 3;
+// }
+
+
+// var g2= gen();
+
+
+// console.log(g2.next());  
+// console.log(g2.next());
+// console.log(g2.next());    // { value: 1, done: false }
+// { value: "foo", done: true }
+       // { value: undefined, done: true }
+// starting generator
+// 第一次运行next方法 { value: 1, done: false }
+// throwing an exception
+// 捕捉错误 { value: 1, done: false }
+// 第三次运行next方法 { value: undefined, done: true }
+// caller done
+
+const g3 = function* (x, y) {
+  let result = yield x + y;
+  return result;
+};
+
+
+
+// Object {value: 3, done: false}
+
+ // Object {value: 1, done: true}
+// 相当于将 let result = yield x + y
+// 替换成 let result = 1;
+// 解构赋值
+// 如果一个数组成员是null，默认值就不会生效，因为null不严格等于undefined
+const [, , o=90]=['3','4',null];
+console.log(o);//67
+
+// 异常捕捉
+
+var g10 = function*(){
+  try{
+    yield console.log('a');;
+  }catch(e){
+    console.log("内部捕获",e);
+  }
+  console.log('b');
+}
+var i10 = g10();
+i10.next()
+
+// try{
+    i10.throw("q");
+    // i10.throw("uq");
+    // throw new Error('0000')
+  // }catch(e){
+  //   console.log("外部捕获",e);
+  // }
+  // 一旦 Generator 执行过程中抛出错误，且没有被内部捕获，就不会再执行下去了
+
+  function* foo() {
+  var x = yield 3;
+  // var y = x.toUpperCase();
+  yield x;
+}
+
+// 
+var it = foo();
+
+
+// it.next(); // { value:3, done:false }
+
+
+// try {
+//   it.next(42);
+// } catch (err) {
+//   console.log(err);
+// }
+function* gen11() {
+  yield 1;
+  yield 2;
+  yield 3;
+}
+
+
+var g11 = gen11();
+
+
+
+// 遍历器对象 g 调用 return 方法后，返回值的 value 属性就是 return 方法的参数 foo 。并且，Generator 函数的遍历就终止了，返回值的 done 属性为 true 
+console.log(g11.next() );
+console.log(g11.return("opop") );
+console.log(g11.next() );
+function* numbers () {
+  yield 1;
+  try {
+    yield 2;
+    yield 3;
+  } finally {
+    yield 4;
+    yield 5;
+  }
+  yield 6;
+}
+//  try...finally 代码块，且正在执行 try 代码块，那么 return 方法会导致立刻进入 finally 代码块，执行完以后，整个函数才会结束。3
+var g12 = numbers();
+console.log(g12.next());
+console.log(g12.next());
+console.log(g12.return("opop009"));
+console.log(g12.next());
+console.log(g12.next());
+console.log(g12.next());
+
+const g14 = function* (x, y) {
+  let result = yield x + y;
+  return result;
+};
+
+
+const gen14 = g14(1, 2);
+console.log(gen14.next()); // Object {value: 3, done: false}
+
+
+// console.log(gen14.throw(new Error("ioioi级")));// Object {value: 1, done: true}
+// 相当于将 let result = yield x + y
+// 替换成 let result = 1;
+//  提供了 yield* 表达式，作为解决办法，用来在一个 Generator 函数里面执行另一个 Generator 函数。
+
+function* foo2(){
+  yield 'a';
+  yield 'b';
+  return 'end'
+}
+function* bar2(){
+  yield 'c';
+  yield* foo2()
+  yield 'd';
+  return 'end'
+}
+
+var b2 = bar2();
+// b2.next();
+console.log(b2.next());
+console.log(b2.next());
+console.log(b2.next());
+console.log(b2.next());
+
+function* inner() {
+  yield 'hello!';
+}
+
+
+function* outer1() {
+  yield 'open';
+  yield inner();
+  yield 'close';
+}
+
+
+var gen = outer1()
+gen.next().value // "open"
+console.log(gen.next().value );// 不加*返回一个遍历器对象
+gen.next().value // "close"
+
+let delegatedIterator = (function* () {
+  yield 'Hello!';
+  yield 'Bye!';
+}());
+
+
+let delegatingIterator = (function* () {
+  yield 'Greetings!';
+  yield* delegatedIterator;
+  yield 'Ok, bye.';
+}());
+
+
+for (const value of delegatingIterator) {
+  console.log(value);
+}
+// "Greetings!
+// "Hello!"
+// "Bye!"
+// "Ok, bye."
+
+// yield* 后面的 Generator 函数（没有 return 语句时），等同于在 Generator 函数内部，部署一个 for...of 循环
+
+function* arrG(){
+  yield* ["1","e","9"];
+}
+var arrg = arrG();
+// yield* 后面跟着一个数组，由于数组原生支持遍历器，因此就会遍历数组成员。
+console.log(arrg.next());
+// console.log(arrg.next());
+// console.log(arrG().next());
+
+function fn() {
+  return "Hello World";
+}
+
+
+console.log(`${fn()}`);
+// foo Hello World bar
+
+const tmp = addr =>`
+<table>
+  ${
+    addr.map(addr =>`
+    <tr><td>${addr.f}</td></tr>
+    <tr><td>${addr.l}</td></tr>
+    `).join('')}
+  }
+  </table>
+`
+const data=[
+  {f:"jan",l:"o"},
+  {f:"lzt",l:"oii"},
+]
+
+console.log(tmp(data));
+
+
+  
+
+console.log([2, 0 ,2 ,1 ,1, 0 ].sort(function(x,y){
+    if(x<y){
+      return -1
+    }
+    if(x>y){
+      return 1
+    }
+    return 0;
+  }));
+  const one = 0.1
+const two = 0.2
+const three = 0.3
+
+// ，0.1和0.2在转换为小数时都存在无限循环现象
+console.log([two - one == one, three - two == one]);
+console.log(two - one );
+console.log(three - two );
+
+</script>
+</html>
