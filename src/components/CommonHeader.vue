@@ -37,7 +37,16 @@ export default {
     //   console.log("lll");
     //   jsCookie.remove("token")
     // }
-      closePag
+      closePage(val){
+        if(val ==="cancel"){
+          console.log("登出");
+          jsCookie.remove('token')
+          // 退出后路由信息
+          // 也要删除
+           jsCookie.remove('menu')
+          this.$router.push("/login")
+        }
+      }
   },
   computed:{
     ...mapState({
@@ -45,7 +54,7 @@ export default {
     })
   },
   mounted() {
-    console.log(this.tags);
+    console.log(this.tags,'tabs data');
   },
 };
 </script>
