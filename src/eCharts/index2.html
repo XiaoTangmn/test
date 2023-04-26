@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<title>WebSocket Client</title>
+<h2>web socket client  test </h2>
+<div id="output"></div>
+<script type="text/javascript">
+  // Initialize WebSocket connection and event handlers
+  function buttonClicked() {
+    // 1.获取output元素
+    // 创建一个WebSocket,带ws前缀
+
+    // ws.onopen开始连接，里发送ws。send（）请求， ws.onclose 监听连接关闭的事件，传event时间
+    // ws.onerror，onmessagee.data到后端
+  output = document.querySelector("#output");
+  var ws = new WebSocket('ws://localhost:2002')
+  ws.onopen=function(e){
+    console.log("kai");
+    ws.send("页面发送的数")
+  }
+  ws.onclose=function(e){
+    console.log("关闭",e.reason);
+   
+  }
+  ws.onerror=function(e){
+    console.log("数据出错",e.error);
+  }
+  ws.onmessage=function(e){
+    log(e.data);
+  
+  }
+  
+  }
+  // Send a message on the WebSocket.
+  function sendMessage(msg) {
+    ws.send(msg);
+    //log("Message sent");
+  }
+  // Display logging information in the document.
+  function log1(s) {
+    var p = document.createElement("p");
+    p.style.wordWrap = "break-word";
+    p.textContent = s;
+    output.appendChild(p);
+    // Also log information on the javascript console
+    console.log(s);
+  }
+
+function log(s){
+  var p = document.getElementById("text");
+  console.log(p);
+  // p.style.wordWrap = "break-word";
+  p.value=s;
+  // output.appendChild(p)
+  console.log(s);
+}
+  // Start running the example.
+  // setup();
+  // log("jidjd")
+</script>
+
+<body>
+      <input id="btn" type="button" onclick=" buttonClicked()" value="跨域获取数据" />
+      <textarea id="text" style="width: 400px; height: 100px;"></textarea>
+
+</body>
+
+</html>
