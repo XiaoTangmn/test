@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        body{
+            align-items: center;
+            width: 100%;
+            background-color: black;
+        }
+        img{
+            width: 40rem;
+            margin-bottom: 5rem;
+            pointer-events: none;
+            user-select: none;
+        }
+        .scrollBox{
+            position: relative;
+            top:1200px;
+            display: flex;
+            flex-direction: column;
+            width: 100%;
+            transition: .5s ease;
+        }
+        .viewbox{
+            top: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 50%;
+            height: 400px;
+        border: 10px solid green;
+            
+            position: fixed;
+        }
+        /* body{
+        border: 10px solid red;
+        background:url('./responsive_image_carousel/img/fj2.jpg') no-repeat;
+        } */
+        .aa{
+            width: 60%;
+            height: 400px;
+            border: 10px solid red;
+        background:url('./responsive_image_carousel/img/fj2.jpg') no-repeat;
+        }
+    </style>
+</head>
+<body>
+    <div class="aa">
+        
+    </div>
+    <div class="viewbox">
+        <!-- scrollBox的offsetheight要等于您出现滑动阻尼的父元素 -->
+        <div class="scrollBox">
+            <img src="./responsive_image_carousel/img/fj.jpg">
+            <img src="./responsive_image_carousel/img/fj2.jpg">
+
+            <img src="./responsive_image_carousel/img/fj3.jpg">
+
+            <img src="./responsive_image_carousel/img/fj4.jpg">
+            <img src="./responsive_image_carousel/img/fj.jpg">
+            <img src="./responsive_image_carousel/img/fj2.jpg">
+
+            <img src="./responsive_image_carousel/img/fj3.jpg">
+
+            <img src="./responsive_image_carousel/img/fj4.jpg">
+        </div>
+    </div>
+</body>
+<script>
+//   let scrollyc=window;
+  let distance=10;
+
+    let scrollbox=document.querySelector('.scrollBox');
+    let aa=document.querySelector('.aa');
+    console.log(aa.scrollTop);
+  let height=scrollbox.offsetHeight;
+//   let scrollyy=height-document.querySelector(".viewbox").offsetHeight;
+
+    var scrollTop = document.documentElement.scrollTop || document.body.scrollTop;
+
+    // let scrollyy=scrollbox.scrollY;
+function resize_body(){
+  
+   aa.style.height=`${height}px`
+}
+function scroll(e){
+    console.log(e.target);
+// if(e.wheelData>0){
+    // console.log(window.scrollY);
+    console.log(document.body.scrollTop);
+//     console.log(scrollyy);if(scrollyy<0){
+//     return
+// }
+
+//     scrollyy+=distance
+// }else{
+//     scrollyy-=distance
+// scrollyy-=10;
+// // }
+//  if(sc>0){
+    console.log(window.scrollY);
+//    scrollyy+=distance
+//  }else{
+//    scrollyy-=distance
+
+// }
+// console.log(e.scrollTop);
+// if(window.scrollY<window.scrollY/2){
+    // console.log(22);
+// }
+// if(window.scrollY<document.body.offsetHeight){
+    scrollbox.style.transform=`translateY(${-window.scrollY+500}px)`
+
+// }
+}
+// 当浏览器初次进入是就会重新更新body
+window.addEventListener('resize',resize_body)
+window.addEventListener('load',resize_body)
+window.addEventListener('scroll',scroll)
+
+</script>
+</html>

@@ -5,34 +5,44 @@
     <el-form-item prop="username" label="用户名">
         <el-input v-model="form.username" placeholder="前端盖呼入账号"></el-input>
     </el-form-item>
-    <el-form-item prop="pwd" label="密码">
-        <el-input v-model="form.pwd" placeholder="前端盖呼入密码" ></el-input>
+    <el-form-item prop="password" label="密码">
+        <el-input v-model="form.password" placeholder="前端盖呼入密码" ></el-input>
     </el-form-item>
      <el-form-item>
          <el-button type="success" :plain="true" @click="submit()">登录</el-button>
     </el-form-item>
+    <button  v-copy="msg">复制的内容</button>
    
   </el-form>
+  <div>
+    <tenW></tenW>
   </div>
+  </div>
+  
 </template>
 
 <script>
 import cookie from 'js-cookie'
 import {getMenu} from '../api'
+import tenW from "@/components/10w.vue"
 // mock是export default不要用{}
 import Mock  from 'mockjs'
 export default {
+  components:{
+        tenW
+  },
 data() {
   return {
+    msg:"hsdiufsdgf",
     form:{
       username:'',
-      pwd:""
+      password:""
     },
     rules:{
       username:[
         {required:true,message:"亲输入用户名",trigger:"blur"}
       ],
-       pwd:[
+       password:[
         {required:true,message:"亲输入密码",trigger:"blur"}
       ],
     }
@@ -50,11 +60,14 @@ methods:{
             if(data.code===20000){
            
               cookie.set("token",data.data.token);
-              this.$router.push("/home")
+                   this.$store.commit('setMenu', data.data.menu)
+                            this.$store.commit('addMenu', this.$router)
+                            // 跳转到首页
+                            this.$router.push('/home')
 //拿出menu 存入store数据
-
-this.$store.commit("setMenu",data.data.menu)
-this.$store.commit("addMenu",this.$router)
+// console.log(data.data.menu,"menu")
+// this.$store.commit("setMenu",data.data.menu)
+// this.$store.commit("addMenu",this.$router)
 
             }else{
                  this.$message.error( data.data.message);

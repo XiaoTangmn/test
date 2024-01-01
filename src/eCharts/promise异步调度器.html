@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    
+</body>
+<script>
+    async function sendRequest(reqList,limit,callback){
+        const promises=[];
+        const pool=new Set();
+        for (let req of reqList) {
+            if(pool.size>=limit){
+                // 如果大于等于限制的并发数就让其等一会
+                await Promise.race(pool).catch(err=>err);
+            }
+            const promise=req()
+            const cb=()=>{
+                console.log(promise);
+                // 会一直add，程序就走不下去了，有他pool里面永远有两个promise，无他pool里面有4个promise，也就是会把urls数组里面的数组数量
+pool.delete(promise)
+            }
+            promise.then(cb,cb)
+pool.add(promise)
+console.log(pool);
+            promises.push(promise)
+        }
+        // promise.then(function(value) {
+  // 把这个函数作为promise对象状态变为成功后调用的回调函数
+//   // 成功时的逻辑
+// }, function(error) {
+//   // 把这个函数作为promise对象状态变为失败后调用的回调函数
+//   // 失败时的逻辑
+// });
+
+        Promise.allSettled(promises).then(callback,callback)
+    }
+    var urls=[function(){
+        return fetch('http://124.223.69.156:3300/getData1').then(response=>response.json())
+    },function(){
+        return fetch('http://124.223.69.156:3300/getData2').then(response=>response.json())
+    },function(){
+        return fetch('http://124.223.69.156:3300/getData3').then(response=>response.json())
+    },function(){
+        return fetch('http://124.223.69.156:3300/getData4').then(response=>response.json())
+    }]
+    sendRequest(urls,2,function(res){
+        console.log(res);
+    })
+</script>
+</html>

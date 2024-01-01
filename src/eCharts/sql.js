@@ -32,7 +32,7 @@ app.all('*', function(req, res, next) {
 // var addUser = 'insert into user value(?,?,?,?,?)';
 // var addUser01 =[]
 
-app.get("/data01",(err,res)=>{
+app.get("/getData",(err,res)=>{
     conn.query('select * from user',function(error,res2,fields){
         if (error) throw error;
       console.log('The solution is: ', res2);

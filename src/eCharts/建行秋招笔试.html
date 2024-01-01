@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    
+</body>
+<script>
+    async function a1(){
+        console.log("a1 sta");
+        await a2();//await promise.reslove()
+        //  await a2();执行后
+        console.log("a1 end");//a1()加了aync就变成了异步任务中的微任务
+
+    }
+    // async函数里有acawit等promise状态发生改变才会急需执行
+    async function a2(){
+        console.log("a2 ");
+
+    }
+    console.log("script start");
+    setTimeout(()=>{
+        console.log("setTime");
+    },0)
+a1()
+// 传promise传的行数的内部是同步执行
+new Promise(function(resolve){
+console.log("p1");
+// resolve()改变成功的状态，reject()是拒绝
+// 宏：  console.log("setTime");
+// 微：console.log("a1 end");，  console.log("p2");
+// 任务队列：先进先出
+resolve()//改变状态的时候promise是才是异步的，才能返回then
+}).then(res=>{
+    console.log("p2");
+})
+console.log("script end");
+
+</script>
+</html>

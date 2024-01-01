@@ -54,7 +54,7 @@ export default {
     })
   },
   mounted() {
-    console.log(this.tags,'tabs data');
+    // console.log(this.tags,'tabs data');
   },
 };
 </script>

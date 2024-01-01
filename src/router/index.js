@@ -8,7 +8,7 @@ import PageOne from '../views/PageOne.vue'
 import PageTwo from '../views/PageTwo.vue'
 import Mall from '../views/Mall.vue'
 import Login from '../views/Login.vue'
-
+import Demo from "@/components/vCopy.vue"
 
 
 const routes= [
@@ -30,6 +30,11 @@ children:[
     path:"/login",
     name:"Login",
     component:Login
+},
+{
+    path:"/l",
+    name:"Login",
+    component:Demo
 }
 
    

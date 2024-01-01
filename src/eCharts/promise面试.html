@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    
+</body>
+<script>
+    class myP{
+        // constructor会在new时执行
+        constructor(exc){
+        this.value=undefined;
+// 定义promist状态
+this.state='pending'
+// 存放稍后完成的任务
+this.onfull=[];
+                const resolve=(val)=>{
+                    console.log(val);
+                    this.value=val;
+                    this.state='suc'
+                    this.onfull.forEach(fn=>fn())
+
+                }
+                const reject=(val)=>{
+                    console.log(val);
+                }
+                // resolve,reject是调用resolve,reject变量
+                exc(resolve,reject)
+
+        }
+        then(suc,fail){
+            // 如果状态为成功
+            if(this.state==='suc'){
+                suc(this.value)
+            }
+            if(this.state=='pending'){
+                this.onfull.push(()=>{
+                    suc(this.value)
+                })
+            }
+
+        }
+    }
+    // function(resolve,reject本质是callback毁掉
+    new myP(function(resolve,reject){
+        // resolve("succ")
+        setTimeout(()=>{
+            resolve("succ2")
+        },3000)
+        // 直接用settimeout1秒后再触发，new myp直接执行完后state状态没改，要等resolve的时候在触发
+    }).then((res)=>{
+        console.log(res);
+    })
+
+
+</script>
+
+</html>

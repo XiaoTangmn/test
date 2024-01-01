@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    
+</body>
+<script>
+    async function demo1(name){
+            const a = await name+1;
+            const b = await name+3;
+            throw new Error("有异常")
+            return a+b;
+    }
+    demo1("小唐").then((res)=>{
+        console.log(res);
+    },
+    err=>{
+        console.log(err); 
+    })
+    // async的await语句遇见thenable也会和promise一样处理,可以用来实现休眠效果
+
+    class Sleep{
+        constructor(ms){
+            this.ms=ms;
+        }
+        then(resolve,reject){
+            const sTime =Date.now();
+            setTimeout(() => {
+                resolve(()=>{
+                    Date.now()-sTime
+                })
+            }, this.ms);
+        }
+    }
+    // 函数内部抛出错误，会导致返回的 Promise 对象变为reject状态。抛出的错误对象会被 catch方法回调函数接收到。
+    (async ()=>{
+        const seelpT=await new Sleep(2000);
+        console.log(seelpT);
+    })()
+
+    async function demo2(name){
+             await new Promise(reject=>{
+                console.log("hsjhdsj");
+                reject();
+             }).catch((err)=>{
+console.log(err);
+             });
+           
+    }
+    demo2();
+
+    function getFoo(){
+     new Promise( resolve=>{setTimeout(()=>{
+                console.log("hello");
+                resolve();
+        },3000)
+        
+    })
+    }
+//    异步操作配合promise
+    function getFoo2(){
+       new Promise( resolve=>{setTimeout(()=>{
+                console.log("hello2");
+                resolve();
+        },400)})
+        
+    }
+  async function foo1(){
+
+   
+//     let foo=await getFoo();
+//    let foo2=await getFoo2();
+// await console.log("hello3");
+let [foo,bar]=await Promise.all([getFoo(),getFoo2()])
+
+    
+  }
+  foo1();
+   async function t2(db){
+    let d2=[{},{},{}];
+    for(let d of d2){
+    await db.push(d)
+   }
+
+    console.log(d2);
+
+   }
+  console.log(
+
+  t2()
+  );
+  
+</script>
+
+</html>

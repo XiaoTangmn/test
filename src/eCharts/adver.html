@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title> 广告图片轮播切换</title>
+    <link rel="stylesheet" href="css/style.css">
+	<style>
+		body{
+			display: flex;
+			
+		}
+		.demo{
+			flex:1;
+			
+			width: 10rem;
+			height: 10rem;
+			background-color: #008000;
+		}
+		.demo1{
+			flex:1;
+			width: 10rem;
+			height: 10rem;
+			background-color: #672a78;
+		}
+		.demo2{
+			flex:1;
+			width: 10rem;
+			height: 10rem;
+			background-color: #839c83;
+		}
+		.demo3{
+			flex:1;
+			width: 10rem;
+			height: 10rem;
+			background-color: #4f188b;
+		}
+	</style>
+</head>
+<body style="background: #000;">
+	<div class="demo">
+		ftyfhgvgh
+
+	</div>
+	<div class="demo1">
+		ftyfhgvgh
+		
+	</div>
+	<div class="demo2">
+		ftyfhgvgh
+		
+	</div>
+	<div class="demo3">
+		ftyfhgvgh
+		
+	</div>
+
+<script src="js/jquery-1.12.4.js"></script>
+<script type="text/javascript" src="js/demo3.js"></script>
+<script>
+	const el=document.documentElement;
+	const a=document.querySelector(".demo");
+	
+	console.log(document.documentElement);
+	// window.addEventListener("pageShow",function(){
+	// 	console.log(el.clientWidth);
+	// 	el.style.fontSize = window.clientWidth /10 +"rem"
+	// })
+	window.addEventListener("resize",function(){
+		console.log(el.clientWidth);
+		
+		el.style.width =el.clientWidth /10 +"rem";
+		console.log(el.style.width,"el");
+	})
+	{
+		let obj={
+			age:90,
+			fu(){
+				console.log(this);
+			}
+			
+		}
+		// obj.fu();
+		// call("要改变指向的对象"，参数，参数2)会立即执行
+		obj.fu.call({age:23})
+		// apply("要改变指向的对象"，【参数，参数2】)
+		obj.fu.apply({age:23})
+		// bind("要改变指向的对象"，参数，参数2)返回一个函数
+		let fn =obj.fu.bind({age:23})
+		fn();
+	}
+	
+	 function timeout(ms){
+		return new Promise(resovle =>{
+			setTimeout(function(){
+				console.log(5555);
+				resovle();
+			},ms)
+		}) 
+		
+	}
+	// async把异步操作变同步操作
+	async function test(ms,val){
+	await	timeout(ms);
+		console.log(val);
+	}
+	test(1000,"你好")
+</script>
+</body>
+
+</html>

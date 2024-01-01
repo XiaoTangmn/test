@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+
+</head>
+<body>
+    <input type="file" id="upload">
+</body>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/spark-md5/3.0.2/spark-md5.min.js">
+
+</script>
+<script>
+    // 关键
+    // 读取文件
+const  unp=document.querySelector("#upload");
+unp.onchange=function(e){
+    // size单位是字节s
+    // files是应用类型
+    // console.log(unp.files[0]);
+    // 文件的分割：通过files的selizs属性
+    // 50M
+  let chunks1= ceefile(unp.files[0],50*1024*1024)
+  let rea= hashDemo(chunks1)
+
+//   rea.then((res)=>{
+//         console.log(res);
+//   })
+send(chunks1,rea,name)
+}
+// 文件分片
+function ceefile(file,chunksize){
+    let res=[]
+    // file是blob的子类
+        for(let i=0;i<file.size;i+=chunksize){
+            // 分片只是分了。没有对数据处理
+res.push(file.slice(i,i+chunksize))
+        }
+        return res
+}
+// index代表文件的第几个分片
+// 服务器需要区分哪一个请求是哪一个视频的片段，请求序号为几（缺少标识：用hash）
+async function hashDemo(chunks){
+    // spark-md5库
+   return await new Promise(function(resolve){
+    const spa= new SparkMD5();
+   console.log(spa);
+
+function _reader(i){
+        if(i>=chunks.length){
+            // end()返回一个hash值
+// console.log(spa.end());
+resolve(spa.end())
+            return
+        }
+       const red= new FileReader();
+       red.readAsArrayBuffer(chunks[i])
+       red.onload=function(e){
+        console.log(e.target.result);
+        const bytes=e.target.result;
+        // 把片段添加进去
+        spa.append(bytes)
+        // i+1的不同片段依次传进去
+        _reader(i+1)
+       }
+}
+// 从第一个片段开始获取
+_reader(0)
+   })
+    
+   
+
+}
+// 传送文件
+function send(chunks,hash,filename){
+    const taskArr=[]
+chunks.forEach((chunk,idx) => {
+    const formData=new FormData();
+formData.append("chunk",chunk)
+formData.append("chunkName",`${hash}-${idx}-${filename}`)
+formData.append("filename",filename)
+console.log(formData);
+const task=fetch("http:127.0.0.1:3000/upload",{
+    method:"post",
+   
+body:formData
+})
+taskArr.push(task)
+
+});
+Promise.all(taskArr).then((res)=>{
+    console.log(res);
+})
+// s.append("")
+
+}
+</script>
+</html>

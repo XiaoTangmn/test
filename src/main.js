@@ -6,13 +6,15 @@ import 'element-ui/lib/theme-chalk/index.css';
 import router from './router/index'
 import "./mock/index2.js"
 import "./api/mock.js"
-
+import De from "@/de/index"
 import store from "./store"
 import Cookies from 'js-cookie';
 
 Vue.use(VueRouter)
 Vue.config.productionTip = false
 Vue.use(ElementUI);
+Vue.use(De);
+
 
 router.beforeEach((to,form,next)=>{
   const token = Cookies.get('token');

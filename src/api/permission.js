@@ -1,11 +1,11 @@
 import Mock from 'mockjs'
 export default {
   getMenu: config => {
-    const { username, pwd } = JSON.parse(config.body)
+    const { username, password } = JSON.parse(config.body)
+    console.log(username, password);
     // 先判断用户是否存在
     // 判断账号和密码是否对应
-    console.log(username,pwd);
-    if (username === 'admin' && pwd === 'admin') {
+    if (username === 'admin' && password === 'admin') {
       return {
         code: 20000,
         data: {
@@ -56,7 +56,7 @@ export default {
           message: '获取成功'
         }
       }
-    } else if (username === 'xiaoxiao' && pwd === 'xiaoxiao') {
+    } else if (username === 'xiaoxiao' && password === 'xiaoxiao') {
       return {
         code: 20000,
         data: {
